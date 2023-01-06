@@ -1,6 +1,10 @@
 package goincv
 
-import "math"
+import (
+	"math"
+
+	"github.com/mpraski/clusters"
+)
 
 // OneEuroFilter is a filter that smooths a signal.
 type OneEuroFilter struct {
@@ -102,4 +106,28 @@ func EstimateAffine2D(src, dst []float32) []float32 {
 		cos, -sin, srcMean[0] - cos*dstMean[0] + sin*dstMean[1],
 		sin, cos, srcMean[1] - sin*dstMean[0] + cos*dstMean[1],
 	}
+}
+
+type KMeansClusters struct {
+	clusterer clusters.HardClusterer
+}
+
+func NewKMeansClusters(v *Value) (*KMeansClusters, error) {
+	k := KMeansClusters{}
+	data := v.To2DFloat64()
+	var err error
+	k.clusterer, err = clusters.KMeans(1000, len(data), clusters.EuclideanDistance)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = k.clusterer.Learn(data); err != nil {
+		return nil, err
+	}
+
+	return &k, nil
+}
+
+func (k *KMeansClusters) Predict(v *Value) int {
+	return k.clusterer.Predict(v.To1DFloat64())
 }
