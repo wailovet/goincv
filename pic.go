@@ -16,6 +16,7 @@ import (
 	"math"
 
 	"github.com/anthonynsimon/bild/segment"
+	"github.com/corona10/goimagehash"
 	"github.com/disintegration/imaging"
 	"github.com/spf13/cast"
 )
@@ -921,4 +922,11 @@ func MergeAlpha(ia []*image.Alpha) *image.Alpha {
 	// 	}
 	// }
 	return ret
+}
+
+func CompareImage(a, b image.Image) int {
+	hash1, _ := goimagehash.DifferenceHash(a)
+	hash2, _ := goimagehash.DifferenceHash(b)
+	distance, _ := hash1.Distance(hash2)
+	return distance
 }
