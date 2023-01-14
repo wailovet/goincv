@@ -924,9 +924,9 @@ func MergeAlpha(ia []*image.Alpha) *image.Alpha {
 	return ret
 }
 
-func CompareImage(a, b image.Image) int {
-	hash1, _ := goimagehash.DifferenceHash(a)
-	hash2, _ := goimagehash.DifferenceHash(b)
+func CompareImage(a, b image.Image, w, h int) float32 {
+	hash1, _ := goimagehash.ExtDifferenceHash(a, w, h)
+	hash2, _ := goimagehash.ExtDifferenceHash(b, w, h)
 	distance, _ := hash1.Distance(hash2)
-	return distance
+	return float32(distance) / float32(w*h)
 }
