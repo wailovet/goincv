@@ -14,7 +14,12 @@ func InterfaceConvertValue(d interface{}) *Value {
 	}
 }
 
+// InitValue(1.0, []int{2, 3, 4})
 func InitValue(initValue interface{}, shape Shape) *Value {
+	if reflect.TypeOf(initValue).Kind() == reflect.Slice {
+		// initValue 不允许是数组和切片
+		panic("initValue not allow array and slices")
+	}
 	val := InterfaceConvertValue(initValue)
 	vShape := val.GetShapeBySlice()
 	vs := Values{}
