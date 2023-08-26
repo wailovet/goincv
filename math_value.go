@@ -118,7 +118,13 @@ func (v *Value) Flatten() Values {
 	}
 	return ret
 }
-
+func (v *Value) MustReshape(reshape Shape) *Value {
+	ret, err := v.Reshape(reshape)
+	if err != nil {
+		panic(err)
+	}
+	return ret
+}
 func (v *Value) Reshape(reshape Shape) (*Value, error) {
 	var err error
 	data := v.Flatten()
